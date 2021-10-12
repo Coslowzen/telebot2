@@ -250,19 +250,18 @@ fetch(url, options)
                      break
                 // Downloader //
             case 'play':
-                if (args.length == 0) return await reply(`Example: ${prefix + command} ending tonikaku kawai`)
-                try {
-                	    ehem = args.join(" ")
-                        asw = await fetchJson(`https://api.vhtear.com/ytmp3?query=${ehem}&apikey=ZEROKARA`)
-                        result = asw.result
-                                caption = `\`❖ Title     :\` ${result.title}\n`
-                                caption += `\`❖ Link      :\`${result.url}\n`
-                                caption += `\`❖ Size :\` ${result.size}\n`
-                                await lol.replyWithPhoto({ url: result.image }, { caption: caption, parse_mode: "Markdown" })
-                                await reply('TUNGGU!musik akan segera dikirim')
-                                acmar = `${result.title}kazumusik.mp3`
-                                if (Number(result.size.split(` MB`)[0]) >= 50.00) return reply(`Sorry the bot cannot send more than 50 MB!`)
-                                await lol.replyWithAudio({ url: result.mp3, filename: acmar }, { thumb: result.image })
+                if (args.length == 0) return await reply(`Example: ${prefix + command} melukis senja`)
+                await fetchJson(`https://api-yogipw.herokuapp.com/api/yt/search?query=${args.join(" ")}`)
+                    .then(async(result) => {
+                        await fetchJson(`https://api.vinzz.my.id/api/yutub/audio?url=https://www.youtube.com/watch?v=${result.result[0].videoId}&apikey=iamvinz`)
+                            .then(async(result) => {
+                                caption = `\`❖ Title     :\` ${result.result.result.title}\n`
+                                caption += `\`❖ Link      :\`${result.result.result.url_audio}\n`
+                                caption += `\`❖ Size :\` ${result.result.result.size}\n`
+                                await lol.replyWithPhoto({ url: result.result.result.thumbnail }, { caption: caption, parse_mode: "Markdown" })
+                                await reply('wait ±1min')
+                                acmar = `${result.result.result.title}kazumusik.mp3`
+                                await lol.replyWithAudio({ url: result.result.result.url_audio, filename: acmar }, { thumb: result.result.result.thumbnail })
                } catch (e) {
                     console.log(e)
                     help.messageError(lol)
